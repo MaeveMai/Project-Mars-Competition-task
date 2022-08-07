@@ -32,24 +32,32 @@ namespace CompetitionMars.Pages
         //click on previous page
         private IWebElement previousPageBtn => driver.FindElement(By.XPath("//div[2]/div[1]/div[2]/button[1]"));
 
-        public void GoToManageListingsPage()
+        public void ViewListing()
         {
             manageListingsLink.WaitForElementClickable(driver, 60);
             manageListingsLink.Click();
-        }
-        public void ViewListing()
-        {
+
             view.WaitForElementClickable(driver, 60);
             view.Click();
         }
 
         public void EditListing()
         {
+
+            manageListingsLink.WaitForElementClickable(driver, 60);
+            manageListingsLink.Click();
+
             edit.WaitForElementClickable(driver, 60);
             edit.Click();
+
+            ShareSkill shareSkillObj = new ShareSkill();
+            shareSkillObj.EditShareSkill();
         }
         public void DeleteListing()
         {
+            manageListingsLink.WaitForElementClickable(driver, 60);
+            manageListingsLink.Click();
+
             delete.WaitForElementClickable(driver, 60);
             delete.Click();
 
@@ -59,18 +67,27 @@ namespace CompetitionMars.Pages
 
         public void ActivateOrDeactivateSkill()
         {
+            manageListingsLink.WaitForElementClickable(driver, 60);
+            manageListingsLink.Click();
+
             ActiveButton.WaitForElementClickable(driver, 60);
             ActiveButton.Click();
         }
 
         public void GoToNextPage()
         {
+            manageListingsLink.WaitForElementClickable(driver, 60);
+            manageListingsLink.Click();
+
             nextPageBtn.WaitForElementClickable(driver, 60);
             nextPageBtn.Click();
         }
 
         public void GoToPreviousPage()
         {
+            manageListingsLink.WaitForElementClickable(driver, 60);
+            manageListingsLink.Click();
+
             previousPageBtn.WaitForElementClickable(driver, 60);
             previousPageBtn.Click();
         }
