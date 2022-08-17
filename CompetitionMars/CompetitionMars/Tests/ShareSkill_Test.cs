@@ -25,7 +25,8 @@ namespace CompetitionMars.Tests
 
             [Test, Order(1)]
             public void CreateShareSkill()
-            {                
+            {
+
                 //Create Share Skill listing
                 ShareSkillObj.CreateShareSkill();
 
@@ -44,7 +45,8 @@ namespace CompetitionMars.Tests
 
             [Test, Order(2)]
             public void EditListing()
-            {                
+            {
+
                 //edit listing
                 manageListingsObj.EditListing();
 
@@ -64,8 +66,9 @@ namespace CompetitionMars.Tests
             [Test, Order(3)]
             public void DeleteListing()
             {
+
                 //delete listing
-                manageListingsObj.DeleteListing();
+                manageListingsObj.DeleteListing();           
 
                 //compare actual category
                 string LatestCategory = ShareSkillObj.GetNewCategory();

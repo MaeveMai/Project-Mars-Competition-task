@@ -71,6 +71,8 @@ namespace CompetitionMars.Pages
             GlobalDefinitions.wait(10);
             ComfirmDeletionButton.Click();
 
+            wait(5);
+
             //refresh the page
             driver.Navigate().Refresh();
         }

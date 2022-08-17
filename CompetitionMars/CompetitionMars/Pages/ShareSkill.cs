@@ -4,11 +4,12 @@ using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using static CompetitionMars.Global.GlobalDefinitions;
-
+//using static Microsoft.AspNetCore.Razor.Language.TagHelperMetadata;
 
 namespace CompetitionMars.Pages
 {
@@ -78,6 +79,12 @@ namespace CompetitionMars.Pages
         private IWebElement ActiveOption => driver.FindElement(By.XPath("//form/div[10]/div[@class='twelve wide column']/div/div[@class = 'field']"));
         private IWebElement HiddenOption => driver.FindElement(By.XPath("//div[2]/div/form/div[10]/div[2]/div/div[2]/div/input"));
 
+        //Click on Upload Work Sample button
+        private IWebElement UploadWorkSamplebutton => driver.FindElement(By.XPath("//div[2]/div/form/div[9]/div/div[2]/section/div/label/div/span/i"));
+
+        //Click on delete Work Sample button
+        private IWebElement DeleteWorkSamplebutton => driver.FindElement(By.XPath("//div[2]/div/form/div[9]/div/div[2]/section/div/label/div/div/i[1]"));
+
         //Click on Save button
         private IWebElement Save => driver.FindElement(By.XPath("//input[@value='Save']"));
 
@@ -86,12 +93,15 @@ namespace CompetitionMars.Pages
         //XPath for Assert
         //Category of the latest listing
         private IWebElement LatestCategory => driver.FindElement(By.XPath("//div[2]/div[1]/div[1]/table/tbody/tr[1]/td[2]"));
-        
+
         //Title of the latest listing
         private IWebElement LatestTitle => driver.FindElement(By.XPath("//div[2]/div[1]/div[1]/table/tbody/tr[1]/td[3]"));
 
         //Description of the latest listing
         private IWebElement LatestDescription => driver.FindElement(By.XPath("//div[2]/div[1]/div[1]/table/tbody/tr[1]/td[4]"));
+
+
+        
 
         public string GetNewCategory()
         {
@@ -107,6 +117,7 @@ namespace CompetitionMars.Pages
         {
             return LatestDescription.Text;
         }
+
 
         public void CreateShareSkill()
         {
@@ -154,7 +165,7 @@ namespace CompetitionMars.Pages
             }
 
             //choose location type
-            if(GlobalDefinitions.ExcelLib.ReadData(3, "Location Type") == "Online")
+            if (GlobalDefinitions.ExcelLib.ReadData(3, "Location Type") == "Online")
             {
                 Online.Click();
             }
@@ -169,14 +180,47 @@ namespace CompetitionMars.Pages
             //input end date
             EndDateDropDown.SendKeys(GlobalDefinitions.ExcelLib.ReadData(3, "EndDays"));
 
-            //choose available days
+            //choose available day, start time, and end time
+            //Create a string list of week days which equal to the string showed on check box
+            List<string> listOfWeekDays = new List<string> { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" };
+
+            //Create a list of available days check box
+            IList<IWebElement> listOfAvailableDaysCheckBox = Days.FindElements(By.Name("Available"));
+
+            //Create a list of start time input box
+            IList<IWebElement> listOfStartTimeInputBox = Days.FindElements(By.Name("StartTime"));
+
+            //create a list of end time input box
+            IList<IWebElement> listOfEndTimeInputBox = Days.FindElements(By.Name("EndTime"));
+
+            //identify the available day from excel file
+            string AvailableDaysValue = GlobalDefinitions.ExcelLib.ReadData(3, "Available Day");
+
+            //identify the start time from excel file
+            string StartTimeValue = GlobalDefinitions.ExcelLib.ReadData(3, "Start Times");
+
+            //identify the end time from excel file
+            string EndTimeVlue = GlobalDefinitions.ExcelLib.ReadData(3, "End Times");
 
 
-            //input start time
-            StartTimeDropDown.SendKeys(GlobalDefinitions.ExcelLib.ReadData(3, "Start Times"));
+            //click on available day and time
+            for (int i = 0; i < listOfAvailableDaysCheckBox.Count; i++)
+            {
+                if (AvailableDaysValue.Contains(listOfWeekDays[i]))
+                {
+                    listOfAvailableDaysCheckBox[i].Click();
 
-            //input end times
-            EndTimeDropDown.SendKeys(GlobalDefinitions.ExcelLib.ReadData(3, "End Times"));
+                    listOfStartTimeInputBox[i].SendKeys(Keys.ArrowRight);
+
+                    listOfStartTimeInputBox[i].SendKeys(StartTimeValue);
+
+                    listOfEndTimeInputBox[i].SendKeys(Keys.ArrowRight);
+
+                    listOfEndTimeInputBox[i].SendKeys(EndTimeVlue);
+
+                }
+            }
+
 
             //choose skill trade type and input data
             if (GlobalDefinitions.ExcelLib.ReadData(3, "Skill Trade") == "Credit")
@@ -199,7 +243,16 @@ namespace CompetitionMars.Pages
             }
 
             //upload Work Samples
+            UploadWorkSamplebutton.Click();
 
+            Thread.Sleep(2000);
+
+            using (Process exeProcess = Process.Start(@"D:\Coding\IC\Competition Mars\Project-Mars-Competition-task\CompetitionMars\CompetitionMars\UploadWorkSample\FileUploadScript.exe"))
+            {
+                exeProcess.WaitForExit();
+            }
+
+            Thread.Sleep(1000);
 
             //choose active
             if (GlobalDefinitions.ExcelLib.ReadData(3, "Active Status") == "Active")
@@ -214,6 +267,8 @@ namespace CompetitionMars.Pages
             //click on save button
             Save.WaitForElementClickable(driver, 60);
             Save.Click();
+
+            wait(5);
         }
 
 
@@ -278,10 +333,63 @@ namespace CompetitionMars.Pages
             //change end date
             EndDateDropDown.SendKeys(GlobalDefinitions.ExcelLib.ReadData(2, "EndDays"));
 
-            //change available date
+            //choose available day, start time, and end time
+            //Create a string list of week days which equal to the string showed on check box
+            List<string> listOfWeekDays = new List<string> { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" };
 
-            //change start time
-            
+            //Create a list of available days check box
+            IList<IWebElement> listOfAvailableDaysCheckBox = Days.FindElements(By.Name("Available"));
+
+            //Create a list of start time input box
+            IList<IWebElement> listOfStartTimeInputBox = Days.FindElements(By.Name("StartTime"));
+
+            //create a list of end time input box
+            IList<IWebElement> listOfEndTimeInputBox = Days.FindElements(By.Name("EndTime"));
+
+            //identify the available day from excel file
+            string AvailableDaysValue = GlobalDefinitions.ExcelLib.ReadData(2, "Available Day");
+
+            //identify the start time from excel file
+            string StartTimeValue = GlobalDefinitions.ExcelLib.ReadData(2, "Start Times");
+
+            //identify the end time from excel file
+            string EndTimeVlue = GlobalDefinitions.ExcelLib.ReadData(2, "End Times");
+
+            //Clear checkbox data and startime and end time
+            for (int i = 0; i < listOfAvailableDaysCheckBox.Count; i++)
+            {
+
+                if (listOfAvailableDaysCheckBox[i].Selected is true)
+                {
+                    listOfAvailableDaysCheckBox[i].Click();
+
+                    listOfStartTimeInputBox[i].SendKeys(Keys.ArrowRight);
+
+                    listOfStartTimeInputBox[i].Clear();
+
+                    listOfEndTimeInputBox[i].SendKeys(Keys.ArrowRight);
+
+                    listOfEndTimeInputBox[i].Clear();
+                }
+            }
+
+            //click on available day and input new start time and end time
+            for (int i = 0; i < listOfAvailableDaysCheckBox.Count; i++)
+            {
+                if (AvailableDaysValue.Contains(listOfWeekDays[i]))
+                {
+                    listOfAvailableDaysCheckBox[i].Click();
+
+                    listOfStartTimeInputBox[i].SendKeys(Keys.ArrowRight);
+
+                    listOfStartTimeInputBox[i].SendKeys(StartTimeValue);
+
+                    listOfEndTimeInputBox[i].SendKeys(Keys.ArrowRight);
+
+                    listOfEndTimeInputBox[i].SendKeys(EndTimeVlue);
+
+                }
+            }
 
             //change skill trade type
             if (GlobalDefinitions.ExcelLib.ReadData(2, "Skill Trade") == "Credit")
@@ -304,6 +412,19 @@ namespace CompetitionMars.Pages
             }
 
             //upload new work sample
+            DeleteWorkSamplebutton.Click();
+            UploadWorkSamplebutton.Click();
+
+            Thread.Sleep(2500);
+            
+
+            using (Process exeProcess = Process.Start(@"D:\Coding\IC\Competition Mars\Project-Mars-Competition-task\CompetitionMars\CompetitionMars\UploadWorkSample\FileUploadScript.exe"))
+            {
+                exeProcess.WaitForExit();
+            }
+
+            Thread.Sleep(2500);
+            
 
             //choose active type
             if (GlobalDefinitions.ExcelLib.ReadData(2, "Active Status") == "Active")
@@ -319,8 +440,10 @@ namespace CompetitionMars.Pages
             Save.WaitForElementClickable(driver, 60);
             Save.Click();
 
+            wait(5);
+            
         }
-       
+
 
     }
 }
