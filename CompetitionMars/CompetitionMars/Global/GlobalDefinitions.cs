@@ -1,4 +1,5 @@
-﻿using ExcelDataReader;
+﻿using AventStack.ExtentReports;
+using ExcelDataReader;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
 using SeleniumExtras.WaitHelpers;
@@ -146,9 +147,9 @@ namespace CompetitionMars.Global
             {
                 var folderLocation = (Base.ScreenshotPath);
 
-                if (!System.IO.Directory.Exists(folderLocation))
+                if (!Directory.Exists(folderLocation))
                 {
-                    System.IO.Directory.CreateDirectory(folderLocation);
+                    Directory.CreateDirectory(folderLocation);
                 }
 
                 var screenShot = ((ITakesScreenshot)driver).GetScreenshot();
@@ -159,6 +160,11 @@ namespace CompetitionMars.Global
                 fileName.Append(".jpeg");
                 screenShot.SaveAsFile(fileName.ToString(), ScreenshotImageFormat.Jpeg);
                 return fileName.ToString();
+            }
+
+            public static string GetScreenshot()
+            {
+                return ((ITakesScreenshot)GlobalDefinitions.driver).GetScreenshot().AsBase64EncodedString;
             }
         }
         #endregion
